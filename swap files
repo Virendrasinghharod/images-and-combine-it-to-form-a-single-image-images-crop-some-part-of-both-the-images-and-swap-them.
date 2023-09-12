@@ -1,0 +1,36 @@
+import cv2
+
+# Load the two images
+image1 = cv2.imread("image1.jpg")
+image2 = cv2.imread("image2.jpg")
+
+# Get the dimensions of the first image
+height1, width1, _ = image1.shape
+
+# Get the dimensions of the second image
+height2, width2, _ = image2.shape
+
+# Create a new image with dimensions that can fit both images side by side
+combined_width = width1 + width2
+combined_height = max(height1, height2)
+combined_image = cv2.resize(image1, (combined_width, combined_height))
+
+# Paste the second image next to the first image
+combined_image[:, width1:] = image2
+
+# Save the combined image
+cv2.imwrite("combined_image.jpg", combined_image)
+
+# Crop left side of image1 and right side of image2
+left_cropped = image1[:, :width1 // 2]
+right_cropped = image2[:, width2 // 2:]
+
+# Create a new image
+swapped_image = image1.copy()
+
+# Swap the cropped regions
+swapped_image[:, :width1 // 2] = right_cropped
+swapped_image[:, width2 // 2:] = left_cropped
+
+# Save the swapped image
+cv2.imwrite("swapped_image.jpg", swapped_image)
